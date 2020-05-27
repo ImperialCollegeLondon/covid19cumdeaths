@@ -4,22 +4,13 @@ mypal<-cols25(25)
 #mypal<-glasbey(25)
 mypal<-brewer.ylorrd(10)
 
-# dat<-read.csv("C:/Users/Lucy/Dropbox (SPH Imperial College)/2019 nCov Lucy/IFR/Appendix_country_specific_suppression_measures.csv")
-# ecdc<-read.csv("C:/Users/Lucy/Dropbox (SPH Imperial College)/IFR update/Data/daily_deaths_ECDC20200518.csv")
-# pop<-read.csv("C:/Users/Lucy/Dropbox (SPH Imperial College)/IFR update/Data/WPP2019_TotalPopulationBySex.csv")
-# usdeaths<-read.csv("C:/Users/Lucy/Dropbox (SPH Imperial College)/IFR update/Data/raw_data/covid_deaths_usafacts.csv")
-# uspop<-read.csv("C:/Users/Lucy/Dropbox (SPH Imperial College)/IFR update/Data/raw_data/covid_county_population_usafacts.csv")
-
-dat<-read.csv("Data/Appendix_country_specific_suppression_measures.csv")
-ecdc<-read.csv("Data/daily_deaths_ECDC20200518.csv")
-pop<-read.csv("Data/WPP2019_TotalPopulationBySex.csv")
-usdeaths<-read.csv("Data/raw_data/covid_deaths_usafacts.csv")
-uspop<-read.csv("Data/raw_data/covid_county_population_usafacts.csv")
-
+dat<-read.csv("Data/Appendix_country_specific_suppression_measures.csv",stringsAsFactors=FALSE)
+ecdc<-read.csv("Data/daily_deaths_ECDC20200518.csv",stringsAsFactors=FALSE)
+pop<-read.csv("Data/WPP2019_TotalPopulationBySex.csv",stringsAsFactors=FALSE)
+usdeaths<-read.csv("Data/covid_deaths_usafacts.csv",stringsAsFactors=FALSE)
+uspop<-read.csv("Data/covid_county_population_usafacts.csv",stringsAsFactors=FALSE)
 
 dat$date_lockdown<-as.Date(dat$Date.of.suppression,"%d/%m/%Y")
-# hist(dat$date_lockdown, breaks=100)
-# table(dat$Deaths.at.suppression)
 
 ecdc$Country<-gsub("_"," ", ecdc$countriesAndTerritories)
 ecdc$Country[which(ecdc$Country=="United States of America")]<-"United States"
@@ -59,6 +50,8 @@ for(i in 1:length(countries_ecdc)) {
 }
 temp<-tapply(ecdc0$deaths,ecdc0$Country,sum,na.rm=T)
 ecdc_deaths_before<-data.frame(Country=row.names(temp), deaths_before_suppression=as.numeric(temp))
+
+# hist(decimal_date(as.Date(dat$Date.of.suppression,format="%d/%m/%Y")),100,col='red',main="Date of Lockdown")
 
 ## peak daily deaths
 temp<-tapply(ecdc$deaths,ecdc$Country,max,na.rm=T)
