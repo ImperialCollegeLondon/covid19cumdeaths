@@ -30,8 +30,8 @@ ecdc$country[ecdc$country == "United States of America"] <- "United States"
 
 # clean up measures data
 measures <- data.frame(country = measures_raw$Country,
-                       date_suppression = as.Date(measures_raw$Date.of.suppression, "%d/%m/%Y"),
-                       deaths_at_suppression = measures_raw$Deaths.at.suppression,
+                       date_suppression = as.Date(measures_raw$Date_suppression, "%d/%m/%Y"),
+                       deaths_at_suppression = measures_raw$deaths_at_suppression,
                        stringsAsFactors = FALSE)
 
 # clean up pop data
