@@ -79,31 +79,39 @@ for (i in seq_along(countries)) {
 # get deaths per million
 df_data$cumu_deaths_per_million <- 1000 * df_data$cumu_deaths / df_data$pop_total
 
+
 # get colour grouping
-col_breaks <- c(0, 1, 2, 5, 10, 20, 50, 100, 150, 200, Inf)
-col_break_names <- c("0", "1", "2-4", "5-9", "10-19", "20-49", "50-99", "100-149", "150-199", "200+")
-df_data$col_group <- as.numeric(cut(df_data$deaths_at_suppression,
+col_breaks <- c(0, 1, 2, 5, 10, 20, 50, 100, 200, Inf)
+col_break_names <- c("0", "1", "2-4", "5-9", "10-19", "20-49", "50-99", "150-199", "200+")
+df_data$col_group <- cut(df_data$deaths_at_suppression,
                                     breaks = col_breaks,
-                                    right = FALSE))
+                                    right = FALSE)
 
 # get colours
 my_pal <- colorRampPalette(c("#D73027", "#FC8D59", "#FEE090", "#E0F3F8", "#91BFDB", "#4575B4"))
-ncol <- length(unique(df_data$col_group))
+ncol <- length(col_breaks) - 1
 col_vec <- rev(my_pal(ncol))
+
+# ensure correct matching of colours
+names(col_vec) <- levels(df_data$col_group)
+names(col_break_names) <- levels(df_data$col_group) 
 
 # ----------------------------------------------------------------
 
+
 # figure 1 plot
 plot1 <- ggplot(df_data) + theme_bw() +
-  geom_line(aes(x = date, y = cumu_deaths_per_million, color = as.factor(col_group), group = country)) +
+  geom_line(aes(x = date, y = cumu_deaths_per_million, color = col_group, group = country)) +
   scale_x_date(limits = c(as.Date("2020-03-01"), max_date), expand = c(0,1)) +
   scale_y_continuous(expand = c(0,10)) +
   xlab("date") + ylab("cumulative deaths\nper million") +
-  scale_color_manual(values = col_vec, labels = col_break_names, name = "deaths prior\nto suppression") +
+  scale_color_manual(values = col_vec, labels = col_break_names, name = "deaths before\nlockdown") +
   theme(legend.position = "bottom",
         panel.border = element_blank(),
         axis.line = element_line(colour = "black", size = 0.3),
         plot.margin = unit(c(1, 2.5, 0.5, 0.5), "cm"))
+
+plot1
 
 # add points for some countries
 focal_countries <- subset(df_data, date == max_date & cumu_deaths_per_million > 200)
@@ -138,6 +146,7 @@ grid.draw(gt)
 
 # save plot to file
 ggsave(filename = "Figures/figure1.pdf", plot = gt, width = 6, height = 5)
+ggsave(filename = "Figures/figure1.png", plot = gt, width = 6, height = 5)
 
 # ----------------------------------------------------------------
 
@@ -153,9 +162,9 @@ df_corplot <- data.frame(country = tmp$country,
 plot2 <- ggplot(df_corplot, aes(x = deaths_before, y = deaths_after)) + theme_bw() +
   geom_point(aes(fill = as.factor(col_group)), shape = 21, size = 2) +
   scale_x_log10() + scale_y_log10() +
-  scale_fill_manual(values = col_vec, labels = col_break_names, name = "deaths prior\nto suppression") +
+  scale_fill_manual(values = col_vec, labels = col_break_names, name = "deaths before\nlockdown") +
   guides(fill = FALSE) +
-  xlab("deaths per million\nbefore suppression") + ylab("deaths per million\nafter suppression")
+  xlab("deaths per million\nbefore lockdown") + ylab("deaths per million\nafter lockdown")
 
 # test correlation
 ct <- cor.test(df_corplot$deaths_before, df_corplot$deaths_after)
@@ -172,3 +181,4 @@ plot2
 
 # save plot to file
 ggsave(filename = "Figures/figure2.pdf", plot = plot2, width = 5, height = 5)
+ggsave(filename = "Figures/figure2.png", plot = plot2, width = 5, height = 5)
