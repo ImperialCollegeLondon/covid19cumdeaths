@@ -1,4 +1,5 @@
 
+# save plot to file
 # figures.R
 #
 # Author: Bob Verity
@@ -46,6 +47,9 @@ df_data <- merge(ecdc, measures, by = "country")
 df_data <- merge(df_data, pop, by = "country")
 
 # ----------------------------------------------------------------
+
+# exclude Belgium
+df_data = df_data[df_data$country!='Belgium',]
 
 # focus on countries with complete suppression data
 df_data <- subset(df_data, !is.na(date_suppression) & !is.na(deaths_at_suppression))
@@ -127,12 +131,12 @@ plot1 <- ggplot(df_data) + theme_bw() +
 plot1
 
 # add points for some countries
-focal_countries <- subset(df_data, date == max_date & cumu_deaths_per_million_six_weeks > 200)
+focal_countries <- subset(df_data, date == max_date & cumu_deaths_per_million > 200)
 plot1 <- plot1 + 
-  geom_point(aes(x = date, y = cumu_deaths_per_million_six_weeks, color = as.factor(col_group)), data = focal_countries)
+  geom_point(aes(x = date, y = cumu_deaths_per_million, color = as.factor(col_group)), data = focal_countries)
 
 # offset country labels
-focal_countries$text_pos <- focal_countries$cumu_deaths_per_million_six_weeks
+focal_countries$text_pos <- focal_countries$cumu_deaths_per_million
 w <- which(focal_countries$country == "Italy")
 focal_countries$text_pos[w] <- focal_countries$text_pos[w] + 12
 w <- which(focal_countries$country == "United Kingdom")
@@ -157,7 +161,6 @@ gt <- ggplot_gtable(ggplot_build(plot1))
 gt$layout$clip[gt$layout$name == "panel"] <- "off"
 grid.draw(gt)
 
-# save plot to file
 ggsave(filename = "Figures/figure1.pdf", plot = gt, width = 6, height = 5)
 ggsave(filename = "Figures/figure1.png", plot = gt, width = 6, height = 5)
 
@@ -177,7 +180,7 @@ plot2 <- ggplot(df_corplot, aes(x = deaths_before, y = deaths_after)) + theme_bw
   scale_x_log10() + scale_y_log10() +
   scale_fill_manual(values = col_vec, labels = col_break_names, name = "deaths before\nlockdown") +
   guides(fill = FALSE) +
-  xlab("deaths per million\nbefore suppresion") + ylab("deaths per million\n six weeks after suppresion")
+  xlab("deaths per million\nbefore lockdown") + ylab("deaths per million\n six weeks after lockdown")
 
 # test correlation
 ct <- cor.test(df_corplot$deaths_before, df_corplot$deaths_after)
