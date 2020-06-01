@@ -1,13 +1,11 @@
 
-# figures.R
+# plot_figure1.R
 #
 # Author: Bob Verity
 # Date: 2020-05-29
 #
 # Purpose:
-# Read in the raw data, clean up and filter, and produce two figures:
-#  1. curves of cumulative deaths
-#  2. correlation plot of deaths before vs. after suppression
+# Read in processed data and plot curves of cumulative deaths.
 #
 # ------------------------------------------------------------------
 
