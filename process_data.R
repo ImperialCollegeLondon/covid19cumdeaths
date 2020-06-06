@@ -94,7 +94,7 @@ sero <- read.csv("Data/summary_sero_vs_deaths.csv", stringsAsFactors = FALSE)
 
 # format country names as factors
 sero$country <- tools::toTitleCase(sero$country)
-sero_name <- c("Spain", "Sweden", "Switzerland", "Denmark")
+sero_name <- c("Spain", "Sweden", "Switzerland", "Denmark","Netherlands","United Kingdom")
 sero$country <- factor(sero$country, levels = sero_name)
 
 # get deaths per million population

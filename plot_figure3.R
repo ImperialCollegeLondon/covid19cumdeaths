@@ -18,7 +18,7 @@ sero <- readRDS("Output/sero_processed.rds")
 
 # set colours
 col_vec <- c("#D73027", "#FDC47D", "#C5E1EE", "#4575B4")
-col_vec <- RColorBrewer::brewer.pal(4, "Set1")
+col_vec <- RColorBrewer::brewer.pal(6, "Set1")
 names(col_vec) <- levels(sero$country)
 
 # figure 3
@@ -27,7 +27,7 @@ plot3 <- ggplot(sero) + theme_bw() +
   geom_point(aes(x = seroprevalence * 100, y = cumu_deaths_per_million, fill = country), shape = 21, size = 2.5, stroke = 0.2) +
   scale_fill_manual(values = col_vec, name = "country") +
   xlab("seroprevalence (%)\n") + ylab("deaths per million at time of\nseroprevalence study") +
-  scale_x_continuous(limits = c(0,15), expand = c(0,0)) +
+  scale_x_continuous(limits = c(0,15.5), expand = c(0,0)) +
   scale_y_continuous(limits = c(0,1500), expand = c(0,0), n.breaks = 5) +
   theme(legend.position = "bottom",
         panel.border = element_blank(),
