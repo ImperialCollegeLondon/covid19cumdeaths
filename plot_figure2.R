@@ -23,7 +23,7 @@ col_vec <- rev(my_pal(ncol))
 names(col_vec) <- levels(df_data$col_group)
 
 # subset to cumulative deaths at time of suppression, and cumulative deaths six weeks later
-df_data$deaths_per_million_at_suppression <- df_data$deaths_at_suppression / df_data$pop_total
+df_data$deaths_per_million_at_suppression <- 1000 * df_data$deaths_at_suppression / df_data$pop_total
 tmp <- subset(df_data, date == df_data$date_suppression + 6*7)
 df_corplot <- data.frame(country = tmp$country,
                          deaths_before = tmp$deaths_per_million_at_suppression,
