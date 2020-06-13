@@ -18,7 +18,7 @@ sero <- readRDS("Output/sero_processed.rds")
 
 # set colours
 col_vec <- c("#D73027", "#FDC47D", "#C5E1EE", "#4575B4")
-col_vec <- RColorBrewer::brewer.pal(4, "Set1")
+col_vec <- RColorBrewer::brewer.pal(6, "Set1")
 names(col_vec) <- levels(sero$country)
 
 # figure 3
